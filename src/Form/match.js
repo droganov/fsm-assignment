@@ -43,6 +43,7 @@ export function match(expression, content) {
         return defaultRule;
     }
   }
+  // NOTE: normally we want a tests factory here, for now it's just a shallow runner
   function next() {
     const key = content.charAt(step);
     const matchKey = expression.charAt(results.length);
