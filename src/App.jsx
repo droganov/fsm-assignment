@@ -3,6 +3,7 @@ import { Provider, Heading } from "@rkta/ui";
 import styled from "@emotion/styled";
 import { Form } from "./Form";
 import { Results } from "./Results";
+import { Graph } from "./Graph";
 
 const Box = styled.main`
   h1, section {
@@ -20,13 +21,13 @@ const Box = styled.main`
 
 function App() {
   const [state, setState] = useState([]);
-  console.log('state', state);
   return (
     <Provider>
       <Box>
         <Heading level={1}>FSM</Heading>
         <Form onChange={setState} />
         <Results {...state} />
+        <Graph {...state} />
       </Box>
     </Provider>
   );

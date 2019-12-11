@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/styled": "^10.0.23",
     "@rkta/context": "^0.0.65",
+    "@rkta/entypo": "^0.0.65",
     "@rkta/ui": "^0.0.65",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",

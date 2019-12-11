@@ -1,5 +1,5 @@
 import React from "react";
-import { Heading, List, Input, Divider } from "@rkta/ui";
+import { Heading } from "@rkta/ui";
 
 const Marqee = ({ content, start, stop }) => {
   const head = content.substring(0, start);
