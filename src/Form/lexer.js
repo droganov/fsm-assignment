@@ -6,24 +6,21 @@ export const OPEN_PAREN = '(';
 export const PLUS = '+';
 export const TIMES = '*';
 
-// export const CLOSE_PAREN = Symbol(')');
-// export const DIGIT = Symbol('[0-9]');
-// export const DIRECT_MATCH = Symbol('DIRECT_MATCH');
-// export const LOWERCASE_LETTER = Symbol('[a-z]');
-// export const OPEN_PAREN = Symbol('(');
-// export const PLUS = Symbol('+');
-// export const TIMES = Symbol('*');
-
 const VALID_BRACKET_EXPRESSIONS = [DIGIT, LOWERCASE_LETTER];
 
-export function parse(expression) {
+export function tokenize(expression = '') {
   let step = -1;
-  let isComplete = false;
+  let isComplete = !expression.length;
   let bracketBuffer = null;
   let resultBuffer = [];
+  let countParen = 0;
 
   const hasOpenBracket = () => bracketBuffer !== null;
 
+  function abort() {
+    resultBuffer = [];
+    isComplete = true;
+  }
   function setComplete() {
     if (hasOpenBracket()) resultBuffer = [];
     isComplete = true;
@@ -31,7 +28,7 @@ export function parse(expression) {
 
   function handleClosingBracket() {
     const expression = VALID_BRACKET_EXPRESSIONS.find(item => item === bracketBuffer.join(''));
-    if (!expression) return setComplete();
+    if (!expression) return abort();
     resultBuffer.push(expression);
     bracketBuffer = null;
   }
@@ -50,22 +47,28 @@ export function parse(expression) {
         bracketBuffer = [char];
         break;
       case '(':
+        countParen++;
         resultBuffer.push(OPEN_PAREN);
         break;
       case ')':
+        countParen--;
+        if (countParen < 0) return abort();
         resultBuffer.push(CLOSE_PAREN);
         break;
       case '+':
-        resultBuffer.push(PLUS);
+        if (resultBuffer.length) resultBuffer.push(PLUS);
+        else abort();
         break;
       case '*':
-        resultBuffer.push(TIMES);
+        if (resultBuffer.length) resultBuffer.push(TIMES);
+        else abort();
         break;
       default:
-        resultBuffer.push(DIRECT_MATCH);
+        resultBuffer.push(char);
         break;
     }
   }
   while (!isComplete) next();
+  if (countParen !== 0) abort();
   return resultBuffer;
 }

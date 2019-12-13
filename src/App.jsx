@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import { Provider, Heading } from "@rkta/ui";
-import styled from "@emotion/styled";
-import { Form } from "./Form";
-import { Results } from "./Results";
-import { Graph } from "./Graph";
+import React, { useState } from 'react';
+import { Provider, Heading } from '@rkta/ui';
+import styled from '@emotion/styled';
+import { Form } from './Form';
+import { Results } from './Results';
+import { Graph } from './Graph';
 
 const Box = styled.main`
-  h1, section {
+  h1,
+  section {
     text-align: center;
   }
   form {
