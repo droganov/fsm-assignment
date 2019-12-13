@@ -1,5 +1,7 @@
-import React from "react";
-import { Heading } from "@rkta/ui";
+import React from 'react';
+import { Heading } from '@rkta/ui';
+
+import { TEST_SUCCEED } from '../Form/match';
 
 const Marqee = ({ content, start, stop }) => {
   const head = content.substring(0, start);
@@ -15,19 +17,21 @@ const Marqee = ({ content, start, stop }) => {
 };
 
 const getBounds = data => {
-  const start = data[0].step;
+  const start = data[0].caret;
   const lastItem = data[data.length - 1];
-  const stop = lastItem.step + lastItem.recursion + 1;
-  console.log('data', data, start, stop);
+  const stop = lastItem.caret + 1;
   return { start, stop };
 };
 
+const successful = ({ type }) => type === TEST_SUCCEED;
+
 export const Results = ({ content, data }) => {
   if (!content) return null;
+  const renderData = data.filter(successful);
   return (
     <section>
       <Heading level={2}>Results</Heading>
-      {data.length ? <Marqee content={content} {...getBounds(data)} /> : "No matches"}
+      {renderData.length ? <Marqee content={content} {...getBounds(renderData)} /> : 'No matches'}
     </section>
   );
 };

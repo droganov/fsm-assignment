@@ -1,59 +1,98 @@
-const compareNocase = (a, b) => a.toLowerCase() === b.toLowerCase();
-const countMatches = (key, string) => {
-  let results = 0;
-  while (key.toLowerCase() === string.substr(results, 1).toLowerCase()) {
-    results++;
-  }
-  return results;
-}
+import last from 'lodash/last';
+import { tokenize, TIMES } from './lexer';
+import { makeRule } from './makeRule';
+import { rewindCursor } from './rewindCursor';
 
-export function match(expression, content) {
-  let step = 0;
-  let results = [];
-  let isComplete = false;
+export const TEST_FAILED = 'TEST_FAILED';
+export const TEST_SUCCEED = 'TEST_SUCCEED';
+export const SKIP_TOKEN = 'SKIP_TOKEN';
+export const REWIND_CURSOR = 'REWIND_CURSOR';
+export const SKIP_REWIND_CURSOR = 'SKIP_REWIND_CURSOR';
+export const END_OF_INPUT = 'END_OF_INPUT';
 
-  function setComplete() {
-    isComplete = true;
-  }
-  function abort() {
-    setComplete();
-    results = [];
-  }
-  function defaultRule({ key, matchKey }) {
-    if (compareNocase(key, matchKey)) results.push({ key, step, matchKey, recursion: 0 });
-    else if (results.length && results.length < expression.length) abort();
+export function match(expression, input, verbose) {
+  const tokens = tokenize(expression);
+  const rules = tokens.map(makeRule);
+
+  let cursor = 0;
+  let rewindedFrom = null;
+  let caret = 0;
+  let opLog = [];
+
+  let expressionComplete = false;
+  let evaluationComplete = false;
+
+  const getChar = () => input.charAt(caret);
+  const getRule = () => rules[cursor];
+  const getToken = () => tokens[cursor];
+
+  const hasReacheTheEnd = () => !getChar() || !getRule();
+  const isSuccessful = () => evaluationComplete || (expressionComplete && hasReacheTheEnd());
+  const isFailed = () => !expressionComplete && hasReacheTheEnd();
+  const isEmpty = () => !tokens.length || !input.length;
+
+  function logOperation(event) {
+    // console.log('logOperation', event);
+    opLog.push(event);
   }
 
-  const makeQuantifierRule = minMatches => ({ key, matchKey }) => {
-    const lastResult = results[results.length - 1];
-    if (!lastResult) return abort();
-    const subContent = content.substr(step);
-    const recursion = countMatches(lastResult.key, subContent);
-    if (recursion < minMatches) return abort();
-    if (recursion) results.push({ key, step: lastResult.step, matchKey, recursion });
-  };
-  
-  function getRule(matchKey) {
-    switch (matchKey) {
-      case '+':
-        return makeQuantifierRule(1);
-      case '*':
-        return makeQuantifierRule(0);
-      default:
-        return defaultRule;
-    }
-  }
-  // NOTE: normally we want a tests factory here, for now it's just a shallow runner
   function next() {
-    const key = content.charAt(step);
-    const matchKey = expression.charAt(results.length);
-    const rule = getRule(matchKey);
-    rule({ key, matchKey });
-    step++;
-    if (content.length <= step) setComplete();
+    const char = getChar();
+    const token = getToken();
+    const rule = getRule();
+
+    const action = rule(char);
+
+    switch (action.type) {
+      case TEST_FAILED:
+        const nextToken = tokens[cursor + 1];
+        if (rewindedFrom) {
+          caret = rewindedFrom.caret - 1;
+          cursor = rewindedFrom.cursor;
+          rewindedFrom = null;
+        } else if (nextToken === TIMES) {
+          caret--;
+        } else {
+          cursor = -1;
+        }
+        break;
+      case SKIP_TOKEN:
+        caret--;
+        break;
+      case REWIND_CURSOR:
+        rewindedFrom = { caret, cursor };
+        cursor = rewindCursor(tokens, cursor);
+        caret--;
+        break;
+      case TEST_SUCCEED:
+      case SKIP_REWIND_CURSOR:
+      default:
+        break;
+    }
+
+    logOperation({ char, type: action.type, token, cursor, caret });
+
+    if (token === last(tokens)) expressionComplete = true;
+    cursor++;
+    loopLimit++;
+    caret++;
   }
-  while (!isComplete) {
-    next();
+  // next();
+  let loopLimit = 0;
+
+  function canContinue() {
+    const isHanging = loopLimit > input.length * 2;
+    const result = !isHanging && !isFailed() && !isEmpty() && !isSuccessful();
+    return result;
   }
-  return results;
+
+  while (canContinue()) next();
+  // console.log('opLog', opLog, isSuccessful());
+  // console.log({
+  //   isSuccessful: isSuccessful(),
+  //   isFailed: isFailed(),
+  //   isEmpty: isEmpty(),
+  // });
+  const result = verbose ? opLog : isSuccessful() && !isFailed() && !isEmpty();
+  return result;
 }
