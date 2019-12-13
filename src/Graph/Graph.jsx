@@ -58,7 +58,6 @@ function getStyle(type) {
 
 export const Graph = ({ data = [] }) => {
   if (!data.length) return null;
-  console.log('data', data);
   return (
     <Box>
       <Heading level={2}>Graph</Heading>

@@ -131,7 +131,6 @@ const string17 = 'as12+';
 test(case17, () => {
   const matched = match(case17, string17);
   const expected = new RegExp(case17).test(string17);
-  console.log('expected', matched, expected);
   expect(matched).toEqual(expected);
 });
 

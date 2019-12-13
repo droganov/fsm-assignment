@@ -32,7 +32,6 @@ export function match(expression, input, verbose) {
   const isEmpty = () => !tokens.length || !input.length;
 
   function logOperation(event) {
-    // console.log('logOperation', event);
     opLog.push(event);
   }
 
@@ -77,7 +76,6 @@ export function match(expression, input, verbose) {
     loopLimit++;
     caret++;
   }
-  // next();
   let loopLimit = 0;
 
   function canContinue() {
@@ -87,12 +85,6 @@ export function match(expression, input, verbose) {
   }
 
   while (canContinue()) next();
-  // console.log('opLog', opLog, isSuccessful());
-  // console.log({
-  //   isSuccessful: isSuccessful(),
-  //   isFailed: isFailed(),
-  //   isEmpty: isEmpty(),
-  // });
   const result = verbose ? opLog : isSuccessful() && !isFailed() && !isEmpty();
   return result;
 }
