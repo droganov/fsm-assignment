@@ -1,9 +1,9 @@
 import { tokenize, CLOSE_PAREN, DIGIT, LOWERCASE_LETTER, OPEN_PAREN, PLUS, TIMES } from './lexer';
 
-// test('+', () => {
-//   const matched = tokenize('+');
-//   expect(matched).toEqual([]);
-// });
+test('+', () => {
+  const matched = tokenize('+');
+  expect(matched).toEqual([]);
+});
 test('(ab[0-9]+', () => {
   const matched = tokenize('(ab[0-9]+');
   expect(matched).toEqual([]);
