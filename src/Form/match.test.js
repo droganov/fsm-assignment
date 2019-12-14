@@ -139,6 +139,14 @@ test('empty case', () => {
   expect(matched).toEqual(false);
 });
 
+const case18 = '(a)+(b)+';
+const string18 = 'aabbc';
+test(case18, () => {
+  const matched = match(case18, string18);
+  const expected = new RegExp(case18).test(string18);
+  expect(matched).toEqual(expected);
+});
+
 // c 0 1 0
 // s 0 1 1
 //   a b

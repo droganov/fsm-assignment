@@ -79,12 +79,13 @@ export function match(expression, input, verbose) {
   let loopLimit = 0;
 
   function canContinue() {
-    const isHanging = loopLimit > input.length * 2;
+    const isHanging = loopLimit > input.length * 20;
     const result = !isHanging && !isFailed() && !isEmpty() && !isSuccessful();
     return result;
   }
 
   while (canContinue()) next();
+
   const result = verbose ? opLog : isSuccessful() && !isFailed() && !isEmpty();
   return result;
 }
