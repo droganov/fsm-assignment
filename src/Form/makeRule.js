@@ -1,5 +1,5 @@
 import { CLOSE_PAREN, DIGIT, LOWERCASE_LETTER, OPEN_PAREN, PLUS, TIMES } from './lexer';
-import { SKIP_TOKEN, REWIND_CURSOR, SKIP_REWIND_CURSOR, TEST_SUCCEED, TEST_FAILED } from './match';
+import { SKIP_TOKEN, REWIND_CURSOR, SKIP_REWIND_CURSOR, TEST_OK, TEST_FAILED } from './match';
 
 const assert = (check, type) => (check ? { type } : { type: TEST_FAILED });
 const constant = type => () => ({ type });
@@ -14,10 +14,10 @@ export function makeRule(token) {
     case TIMES:
       return constant(SKIP_REWIND_CURSOR);
     case DIGIT:
-      return char => assert(char >= '0' && char <= '9', TEST_SUCCEED);
+      return char => assert(char >= '0' && char <= '9', TEST_OK);
     case LOWERCASE_LETTER:
-      return char => assert(char >= 'a' && char <= 'z', TEST_SUCCEED);
+      return char => assert(char >= 'a' && char <= 'z', TEST_OK);
     default:
-      return char => assert(char === token, TEST_SUCCEED);
+      return char => assert(char === token, TEST_OK);
   }
 }

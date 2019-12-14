@@ -4,7 +4,7 @@ import { makeRule } from './makeRule';
 import { rewindCursor } from './rewindCursor';
 
 export const TEST_FAILED = 'TEST_FAILED';
-export const TEST_SUCCEED = 'TEST_SUCCEED';
+export const TEST_OK = 'TEST_OK';
 export const SKIP_TOKEN = 'SKIP_TOKEN';
 export const REWIND_CURSOR = 'REWIND_CURSOR';
 export const SKIP_REWIND_CURSOR = 'SKIP_REWIND_CURSOR';
@@ -63,7 +63,7 @@ export function match(expression, input, verbose) {
         cursor = rewindCursor(tokens, cursor);
         caret--;
         break;
-      case TEST_SUCCEED:
+      case TEST_OK:
       case SKIP_REWIND_CURSOR:
       default:
         break;
