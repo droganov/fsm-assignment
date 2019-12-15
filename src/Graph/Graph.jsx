@@ -3,13 +3,7 @@ import styled from '@emotion/styled';
 import { Heading, Paper } from '@rkta/ui';
 import { ArrowLongDown, ArrowLongRight, Check, Cw, Cycle, Block } from '@rkta/entypo';
 
-import {
-  TEST_SUCCEED,
-  TEST_FAILED,
-  SKIP_TOKEN,
-  REWIND_CURSOR,
-  SKIP_REWIND_CURSOR,
-} from '../Form/match';
+import { TEST_OK, TEST_FAILED, SKIP_TOKEN, REWIND_CURSOR, SKIP_REWIND_CURSOR } from '../Form/match';
 
 const Box = styled.figure`
   align-items: center;
@@ -42,7 +36,7 @@ const Box = styled.figure`
 
 function getStyle(type) {
   switch (type) {
-    case TEST_SUCCEED:
+    case TEST_OK:
       return { color: 'color5', Icon: Check };
     case TEST_FAILED:
       return { color: 'color2', Icon: Block };

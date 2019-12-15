@@ -1,7 +1,7 @@
 import React from 'react';
 import { Heading } from '@rkta/ui';
 
-import { TEST_SUCCEED } from '../Form/match';
+import { TEST_OK } from '../Form/match';
 
 const Marqee = ({ content, start, stop }) => {
   const head = content.substring(0, start);
@@ -23,7 +23,7 @@ const getBounds = data => {
   return { start, stop };
 };
 
-const successful = ({ type }) => type === TEST_SUCCEED;
+const successful = ({ type }) => type === TEST_OK;
 
 export const Results = ({ content, data }) => {
   if (!content) return null;
