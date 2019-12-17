@@ -8,7 +8,8 @@ export const TIMES = '*';
 
 const VALID_BRACKET_EXPRESSIONS = [DIGIT, LOWERCASE_LETTER];
 
-export function tokenize(expression = '') {
+export function tokenize(inputString = '') {
+  const expression = [...inputString];
   let step = -1;
   let isComplete = !expression.length;
   let bracketBuffer = null;
@@ -36,7 +37,7 @@ export function tokenize(expression = '') {
   function next() {
     step++;
     if (step === expression.length - 1) setComplete();
-    const char = expression.charAt(step);
+    const char = expression[step];
     if (hasOpenBracket()) {
       bracketBuffer.push(char);
       if (char === ']') handleClosingBracket();

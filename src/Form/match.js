@@ -10,8 +10,9 @@ export const REWIND_CURSOR = 'REWIND_CURSOR';
 export const SKIP_REWIND_CURSOR = 'SKIP_REWIND_CURSOR';
 export const END_OF_INPUT = 'END_OF_INPUT';
 
-export function match(expression, input, verbose) {
-  const tokens = tokenize(expression);
+export function match(expression, inputString, verbose) {
+  const input = [...inputString];
+  const tokens = tokenize([...expression]);
   const rules = tokens.map(makeRule);
 
   let cursor = 0;
@@ -22,7 +23,7 @@ export function match(expression, input, verbose) {
   let expressionComplete = false;
   let evaluationComplete = false;
 
-  const getChar = () => input.charAt(caret);
+  const getChar = () => input[caret];
   const getRule = () => rules[cursor];
   const getToken = () => tokens[cursor];
 
